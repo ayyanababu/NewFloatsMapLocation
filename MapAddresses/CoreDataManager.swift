@@ -21,7 +21,7 @@ class CoreDataManager{
     
     //MARK: Save
     
-    func saveLocationIntoDB(tableName: String, data: Address, error: ((String) -> Void)){
+    func saveLocationIntoDB(tableName: String, data: Address, error: ((String) -> Void), sucess: ((String) -> Void)){
         
         //Checking while saving is duplicate if duplicate throw error
         //else save data into DB
@@ -41,6 +41,7 @@ class CoreDataManager{
                 loc.timestamp = NSNumber(double: data.timeStamp)
                 
                 coreDataStack.saveMainContext()
+                sucess("sucess")
             }else{
                 error("This Coordinates Already Available in DB")
             }

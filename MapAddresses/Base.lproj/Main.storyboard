@@ -144,11 +144,24 @@
                                     <outlet property="delegate" destination="BUd-XY-nGh" id="QOm-u5-YuM"/>
                                 </connections>
                             </mapView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Address Saved Sucessfully.." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="syD-hA-72E">
+                                <rect key="frame" x="200" y="106" width="200" height="30"/>
+                                <color key="backgroundColor" red="0.90588235289999997" green="0.27058823529999998" blue="0.12549019610000001" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="200" id="7uO-il-Egv"/>
+                                    <constraint firstAttribute="height" constant="30" id="x1z-eR-87r"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="15"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="hOn-aQ-9dw" firstAttribute="top" secondItem="7Mb-F0-ZMf" secondAttribute="bottom" id="5dc-Tb-eZH"/>
+                            <constraint firstItem="syD-hA-72E" firstAttribute="top" secondItem="ViV-4W-Bpc" secondAttribute="bottom" constant="42" id="D6X-rR-bXv"/>
                             <constraint firstItem="7Mb-F0-ZMf" firstAttribute="leading" secondItem="LgI-tz-QNH" secondAttribute="leading" id="FeE-yH-kB5"/>
+                            <constraint firstItem="syD-hA-72E" firstAttribute="centerX" secondItem="LgI-tz-QNH" secondAttribute="centerX" id="Uak-S3-9db"/>
                             <constraint firstItem="7Mb-F0-ZMf" firstAttribute="top" secondItem="ViV-4W-Bpc" secondAttribute="bottom" id="hfq-P8-gkQ"/>
                             <constraint firstAttribute="trailing" secondItem="7Mb-F0-ZMf" secondAttribute="trailing" id="xcM-2f-eFK"/>
                         </constraints>
@@ -156,6 +169,7 @@
                     <navigationItem key="navigationItem" id="1gV-lK-4hJ"/>
                     <connections>
                         <outlet property="mapView" destination="7Mb-F0-ZMf" id="R4i-aq-3Vj"/>
+                        <outlet property="saveMessageLabel" destination="syD-hA-72E" id="Cca-YK-jPd"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iWy-jQ-LLt" userLabel="First Responder" sceneMemberID="firstResponder"/>

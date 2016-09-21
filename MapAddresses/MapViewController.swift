@@ -24,7 +24,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     var address: Address!
     var location: Location!
     
+    @IBOutlet weak var saveMessageLabel: UILabel!
     var delegate: loadDataProtocol?
+    lazy var timer = NSTimer()
+
     
     // MARK: - ViewController Methods
     override func viewDidLoad() {
@@ -35,7 +38,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     }
     
     func configureNavBar(){
-        
+        self.saveMessageLabel.hidden = true
         self.navigationController!.navigationBar.tintColor = UIColor.whiteColor()
         self.navigationItem.title = "Map"
         
@@ -218,15 +221,43 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     }
     
     
+    func hideLabel(){
+        self.saveMessageLabel.hidden = true
+        
+    }
+    
+    
     func saveLocation(){
         
-        CoreDataManager.SharedInstance.saveLocationIntoDB(Constants.LOCATION_ENTITY_NAME, data: self.address){
-            (errormessage) in
-            Utility.showAlert("Error", confirmText: "OK", msgText: errormessage, showConfirm: true, style: .Alert, viewController: self, alertHandler: { (data) -> () in
+        if self.address == nil{
+            
+            print("Data is not captured, so cannot save")
+            Utility.showAlert("Error", confirmText: "OK", msgText: "Data is not captured, so cannot save", showConfirm: true, style: .Alert, viewController: self, alertHandler: { (data) -> () in
                 
             })
+            return
         }
+        
+        
+        
+        
+        
+        CoreDataManager.SharedInstance.saveLocationIntoDB(Constants.LOCATION_ENTITY_NAME, data: self.address, error: { (errormsg) in
+            //error
+            Utility.showAlert("Error", confirmText: "OK", msgText: errormsg, showConfirm: true, style: .Alert, viewController: self, alertHandler: { (data) -> () in
+                
+            })
+        }) { (sucessmsg) in
+            //sucess
+            self.saveMessageLabel.hidden = false
+            self.timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: #selector(MapViewController.hideLabel), userInfo: nil, repeats: false)
+        }
+        
+        
+        
+        
     }
+    
     
     
 }
