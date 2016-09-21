@@ -14,6 +14,8 @@ class Constants{
     static let LOCATION_ENTITY_NAME = "Location"
     static let ADDRESS_ATTRIBUTE = "address"
     static let TIMESTAMP_ATTRIBUTE = "timestamp"
+    static let LATITUDE_ATTRIBUTE = "latitude"
+    static let LONGITUDE_ATTRIBUTE = "longitude"
     
     
     
