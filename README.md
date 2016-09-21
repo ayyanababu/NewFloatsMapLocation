@@ -7,6 +7,8 @@ Xcode 7.3
 
 If Using simulator , please select in simulator Menu Debug-> Location -> any location to start
 
+For Best Output, please reset your current simulator
+
 Evaluator Notes:
 
 a. Used MVC Pattern.
