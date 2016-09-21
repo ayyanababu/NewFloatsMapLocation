@@ -18,16 +18,18 @@ protocol loadDataProtocol {
 class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     
     @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet weak var saveMessageLabel: UILabel!
+
     lazy var locationManager = CLLocationManager()
     var annotation = MKPointAnnotation()
     let geocoder = CLGeocoder()
+    
     var address: Address!
     var location: Location!
-    
-    @IBOutlet weak var saveMessageLabel: UILabel!
     var delegate: loadDataProtocol?
+    
     lazy var timer = NSTimer()
-
+    
     
     // MARK: - ViewController Methods
     override func viewDidLoad() {
@@ -135,8 +137,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
                     
                 })
             })
-            
-            
         }
     }
     
@@ -185,28 +185,46 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         
         let center = CLLocationCoordinate2D(latitude: lat, longitude: long)
         let region = MKCoordinateRegion(center: center, span: MKCoordinateSpan(latitudeDelta: 1.0, longitudeDelta: 1.0))
-        self.mapView.setRegion(region, animated: true)
         
-        annotation.coordinate = center
-        annotation.title = "Current Location"
-        self.mapView.addAnnotation(annotation)
+        //Finding wether the coordinates fit into world coordinates
+        //If fits then we will plot the location 
+        //Else we through error wrong coordinates
         
-        //get address from coordinates
-        let coordinates: CLLocation = CLLocation(latitude: lat, longitude: long)
-        self.getAddressFromCoordinates(coordinates, completion: { (address, placemark) in
+        let fitregion = self.mapView.regionThatFits(region)
+        if (!isnan(fitregion.span.latitudeDelta) && !isnan(fitregion.span.longitudeDelta)) {
             
-            let address = Address(lat: lat, long: long, address: address, date: (NSDate().timeIntervalSince1970))
-            self.address = address
-            dispatch_async(dispatch_get_main_queue(), {
-                if let locality = placemark.locality,
-                    let country = placemark.country{
-                    self.annotation.title = "\(locality) , \(country) "
+            self.mapView.setRegion(region, animated: true)
+            
+            //After setting the Region we are setting the annotation to address
+            annotation.coordinate = center
+            annotation.title = "Current Location"
+            self.mapView.addAnnotation(annotation)
+            
+            //get address from coordinates
+            let coordinates: CLLocation = CLLocation(latitude: lat, longitude: long)
+            self.getAddressFromCoordinates(coordinates, completion: { (address, placemark) in
+                
+                let address = Address(lat: lat, long: long, address: address, date: (NSDate().timeIntervalSince1970))
+                self.address = address
+                dispatch_async(dispatch_get_main_queue(), {
+                    if let locality = placemark.locality,
+                        let country = placemark.country{
+                        self.annotation.title = "\(locality) , \(country) "
+                        
+                    }
                     
-                }
+                })
+            })
+
+        }else{
+            //wrong coordinates
+            Utility.showAlert("Error", confirmText: "OK", msgText: "Coordinates are Wrong so cannot plot Map", showConfirm: true, style: .Alert, viewController: self, alertHandler: { (data) -> () in
                 
             })
-        })
+        }
         
+        
+   
         
     }
     
@@ -221,16 +239,9 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     }
     
     
-    func hideLabel(){
-        self.saveMessageLabel.hidden = true
-        
-    }
-    
-    
     func saveLocation(){
         
         if self.address == nil{
-            
             print("Data is not captured, so cannot save")
             Utility.showAlert("Error", confirmText: "OK", msgText: "Data is not captured, so cannot save", showConfirm: true, style: .Alert, viewController: self, alertHandler: { (data) -> () in
                 
@@ -238,14 +249,9 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
             return
         }
         
-        
-        
-        
-        
         CoreDataManager.SharedInstance.saveLocationIntoDB(Constants.LOCATION_ENTITY_NAME, data: self.address, error: { (errormsg) in
             //error
             Utility.showAlert("Error", confirmText: "OK", msgText: errormsg, showConfirm: true, style: .Alert, viewController: self, alertHandler: { (data) -> () in
-                
             })
         }) { (sucessmsg) in
             //sucess
@@ -253,11 +259,12 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
             self.timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: #selector(MapViewController.hideLabel), userInfo: nil, repeats: false)
         }
         
-        
-        
-        
     }
     
-    
+    //MARK: Label Timer Method
+    func hideLabel(){
+        self.saveMessageLabel.hidden = true
+    }
+
     
 }

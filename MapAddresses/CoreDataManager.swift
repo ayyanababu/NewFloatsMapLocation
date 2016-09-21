@@ -88,7 +88,7 @@ class CoreDataManager{
         let managedContext = coreDataStack.managedObjectContext
         let fetchRequest = NSFetchRequest(entityName: tablename)
         
-        fetchRequest.predicate = NSPredicate(format: "address = %@", originalData.address!)
+        fetchRequest.predicate = NSPredicate(format: "\(Constants.ADDRESS_ATTRIBUTE) = %@", originalData.address!)
         do{
             let location = try managedContext.executeFetchRequest(fetchRequest) as! [Location]
             if location.count > 0 {
@@ -102,7 +102,7 @@ class CoreDataManager{
                 sucess("sucess")
                 
             }else{
-                error("not updated")
+                error("Records not updated")
             }
         }catch let error as NSError {
             print("Could not fetch \(error), \(error.userInfo)")
