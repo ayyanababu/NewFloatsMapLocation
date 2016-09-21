@@ -7,6 +7,8 @@ Xcode 7.3
 
 If Using simulator , please select in simulator Menu Debug-> Location -> any location to start
 
+Evaluator Notes:
+
 a. Used MVC Pattern.
 b. Visited Locations will be saved to DB based on TimeStamp
 c. So LastVisited will be viewed first in List.
