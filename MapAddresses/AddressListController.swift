@@ -27,11 +27,32 @@ class AddressListController: UIViewController, loadDataProtocol {
     
     
     override func viewDidLoad() {
+        
         super.viewDidLoad()
         self.navigationItem.title = "Locations"
         self.getTableSourceData()
+        self.setFloatButton()
         
     }
+    
+    func setFloatButton(){
+        
+        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(self.draggedFloatButton))
+        panGesture.cancelsTouchesInView = true
+        self.floatButton.addGestureRecognizer(panGesture)
+    }
+    
+    
+    func draggedFloatButton(recognizer: UIPanGestureRecognizer){
+        
+        let button = (recognizer.view! as! UIButton)
+        let translation = recognizer.translationInView(button)
+        button.center = CGPoint(x: button.center.x + translation.x, y: button.center.y + translation.y)
+        recognizer.setTranslation(CGPointZero, inView: button)
+        
+    }
+    
+
     
     
     func getTableSourceData(){
